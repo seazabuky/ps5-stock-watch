@@ -1,0 +1,14 @@
+name: reachability-test
+on:
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Try store endpoints
+        run: |
+          for u in https://store.sony.co.th/collections/console/products/ps5-console-e-disc-edition.js https://store.sony.co.th/collections/playstation; do
+            echo "== $u"
+            curl -sS -L -A "Mozilla/5.0" --max-time 60 -o /tmp/out.txt -w "status=%{http_code} bytes=%{size_download}\n" "$u" || echo "curl failed: $?"
+            head -c 300 /tmp/out.txt; echo
+          done
